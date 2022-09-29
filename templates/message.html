@@ -22,37 +22,89 @@ img, video {
     max-width: 400px;
     margin: 0 auto;
 }
+
+pre, a {
+    padding-left: 20px;
+}
 </style>
 
 <script>
     content_a = {
+        message_date: "",
         message : ""
         };
+    function update_box(content){
+            element = document.getElementById("box");
+            element.innerHTML = content
+        }
     function link_to_string (link, variable){
             fetch(link).then(function (response) {
                     // The API call was successful!
-                    return response.text();
+                    return response.json();
                 }).then(function (data) {
                         // This is the Text from our response
-                        console.log(data);
-                        variable.message = data
+                        var tmpstring = '';
+                        for(var index=0; index<data.length; index++){
+                                tmpstring += '\n' + "@" + data[index].timestamp
+                                tmpstring += '\n' + data[index].message
+                            }
+                        update_box(tmpstring)
                     }).catch(function (err) {
                             // There was an error
                             console.warn('Something went wrong.', err);
                         });
         }
-    link_to_string('https://mkonji.xyz/message_from_a_get', content_a);
+    function manual_refresh(){
+        link_to_string('https://mkonji.xyz/message_from_a_get', content_a);
+        }
+    function loop_refresh(){
+        setTimeout(() => {
+                if(document.getElementById("auto_refresh").checked){
+                        console.log("refreshing"); 
+                        manual_refresh();
+                    }
+                loop_refresh();
+            }, 3000);
+        }
+
+    window.onload = init;
+    function init(){
+            update_box("<disconnected>")
+            loop_refresh();
+        }
+
 </script>
 
 <body>
     <h1>Power: {{ power }}</h1>
     <h2>Time: {{ title }}</h2>
-    <form action = "https://mkonji.xyz/ding" method = "post">
-        <input type="submit" name="ding_button" value="Ding Me">
-        <input type="password" name="password" value="" placeholder="password">
-        <h2>Latest:</h2>
-        <img src="data:image/jpeg;base64,{{ sendimage | safe }}" alt="Image not ready.">
-        <video controls="" loop="" autoplay="" src="/static/see.webm?u={{latest}}"></video>
+    <h2>Box:</h2>
+    <pre id="box"> </pre>
+
+    <div>
+        <form action = "https://mkonji.xyz/message_from_a_post" method = "post">
+            <input type="text" name="message" value="" placeholder="say something">
+            <br>
+            <input type="password" name="password" value="" placeholder="password">
+            <input type="submit" name="enter_message" value="Send">
+        </form>
+        <button onclick="manual_refresh()">Manual Refresh</button>
+        <input type="checkbox" id="auto_refresh">
+        <label for="auto_refresh">(auto)</label>
+    </div>
+
+    <div>
+        <form action = "https://mkonji.xyz/ding" method = "post">
+            <input type="submit" name="ding_button" value="Ding Me">
+            <input type="password" name="password" value="" placeholder="ding password">
+        </form>
+    </div>
+    <br> <a href="https://mkonji.xyz/boxarch" text="archive">archive</a>
+
+
+    <h2>Latest:</h2>
+    <img src="data:image/jpeg;base64,{{ sendimage | safe }}" alt="Image not ready.">
+    <video controls="" loop="" autoplay="" src="/static/see.webm?u={{latest}}"></video>
 </body>
 </html>
 
