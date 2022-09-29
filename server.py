@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, send_file
+from flask import Flask, render_template, request, send_from_directory, send_file, jsonify
 from datetime import datetime
 from PIL import Image
 import base64
@@ -7,6 +7,8 @@ import io
 
 app = Flask(__name__)
 name_searchdir = "/storage/emulated/0/DCIM/Camera"
+message_from_a = "<initialized>"
+message_from_b = "<initialized>"
 
 def dir_last_updated(folder):
     return str(max(os.path.getmtime(os.path.join(root_path, f))
@@ -84,6 +86,29 @@ def send_static():
 @app.route('/ding',methods = ['POST', 'GET'])
 def ding():
     password = request.form.get("password")
+    if password == "1234qwerQWER":
+        os.system("mpv ding.mp3")
+    else:
+        print(password)
+    return ('', 204)
+
+@app.route('/message_from_a_get',methods = ['POST', 'GET'])
+def message_from_a_get():
+    global message_from_a
+    content_time = datetime.now()
+    content_time = content_time.strftime("%m/%d/%Y, %H:%M:%S")
+    return jsonify(content_time + " >> " + message_from_a)
+@app.route('/message_from_b_get',methods = ['POST', 'GET'])
+def message_from_b_get():
+    global message_from_b
+    return jsonify(message_from_b)
+
+@app.route('/message_from_a_put',methods = ['POST'])
+def message_from_a_post():
+    global message_from_a
+    password = request.form.get("password")
+    message = request.form.get("message")
+    message_from_a = message
     if password == "1234qwerQWER":
         os.system("mpv ding.mp3")
     else:

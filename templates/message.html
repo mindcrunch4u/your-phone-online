@@ -3,34 +3,54 @@
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Time: {{ title }}</title>
-	</head>
+    <head>
+        <meta charset="utf-8">
+        <title>Time: {{ title }}</title>
+    </head>
 
 <style>
 html, body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 img, video {
-	padding: 0;
-	display: block;
-	width: 100%;
-	max-width: 400px;
-	margin: 0 auto;
+    padding: 0;
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
 }
 </style>
 
+<script>
+    content_a = {
+        message : ""
+        };
+    function link_to_string (link, variable){
+            fetch(link).then(function (response) {
+                    // The API call was successful!
+                    return response.text();
+                }).then(function (data) {
+                        // This is the Text from our response
+                        console.log(data);
+                        variable.message = data
+                    }).catch(function (err) {
+                            // There was an error
+                            console.warn('Something went wrong.', err);
+                        });
+        }
+    link_to_string('https://mkonji.xyz/message_from_a_get', content_a);
+</script>
+
 <body>
     <h1>Power: {{ power }}</h1>
-    <h1>Time: {{ title }}</h1>
+    <h2>Time: {{ title }}</h2>
     <form action = "https://mkonji.xyz/ding" method = "post">
         <input type="submit" name="ding_button" value="Ding Me">
         <input type="password" name="password" value="" placeholder="password">
-        <h1>Latest:</h1>
+        <h2>Latest:</h2>
         <img src="data:image/jpeg;base64,{{ sendimage | safe }}" alt="Image not ready.">
         <video controls="" loop="" autoplay="" src="/static/see.webm?u={{latest}}"></video>
 </body>
