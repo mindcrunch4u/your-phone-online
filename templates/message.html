@@ -1,0 +1,61 @@
+{# templates/message.txt #}
+
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Time: {{ title }}</title>
+	</head>
+
+<style>
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+img, video {
+	padding: 0;
+	display: block;
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto;
+}
+</style>
+
+<body>
+    <h1>Power: {{ power }}</h1>
+    <h1>Time: {{ title }}</h1>
+    <form action = "https://mkonji.xyz/ding" method = "post">
+        <input type="submit" name="ding_button" value="Ding Me">
+        <input type="password" name="password" value="" placeholder="password">
+        <h1>Latest:</h1>
+        <img src="data:image/jpeg;base64,{{ sendimage | safe }}" alt="Image not ready.">
+        <video controls="" loop="" autoplay="" src="/static/see.webm?u={{latest}}"></video>
+</body>
+</html>
+
+{#
+
+{% if score > 80 %}
+I'm happy to inform you that you did very well on today's {{ test_name }}.
+{% else %}
+I'm sorry to inform you that you did not do so well on today's {{ test_name }}.
+{% endif %}
+You reached {{ score }} out of {{ max_score }} points.
+
+#}
+
+
+{#
+
+  <ul>
+  {% for student in students %}
+    <li>
+      <em>{{ student.name }}:</em> {{ student.score }}/{{ max_score }}
+    </li>
+  {% endfor %}
+  </ul>
+
+#}
