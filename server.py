@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, send_from_directory, send_fil
 from threading import Thread, Lock
 
 from security import is_password_valid
-from shared import name_searchdir, build_message, timestring_now
+from shared import name_searchdir, build_message, timestring_now, archive_message
 from multimedia import serve_latest_image_base64, dir_last_updated, latest_file_by_type
+import os
 
 app = Flask(__name__)
 message_from_a = list()
 message_mutex = Lock()
+max_arch_limit = 5
 
 @app.route('/favicon.ico')
 def favicon():
@@ -57,6 +59,9 @@ def message_from_a_post():
         password = request.form.get("password")
         message = request.form.get("message")
         if is_password_valid(password):
+            if len(message_from_a) > max_arch_limit:
+                archive_message(message_from_a)
+                message_from_a = list()
             message_from_a = build_message(message_from_a, message)
         else:
             print(password)

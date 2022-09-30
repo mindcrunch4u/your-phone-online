@@ -23,7 +23,7 @@ img, video {
     margin: 0 auto;
 }
 
-pre, a {
+.messagebox {
     padding-left: 20px;
 }
 </style>
@@ -45,7 +45,7 @@ pre, a {
                         // This is the Text from our response
                         var tmpstring = '';
                         for(var index=0; index<data.length; index++){
-                                tmpstring += '\n' + "@" + data[index].timestamp
+                                tmpstring += '\n' + "@ " + data[index].timestamp
                                 tmpstring += '\n' + data[index].message
                             }
                         update_box(tmpstring)
@@ -70,6 +70,7 @@ pre, a {
     window.onload = init;
     function init(){
             update_box("<disconnected>")
+            manual_refresh();
             loop_refresh();
         }
 
@@ -79,27 +80,30 @@ pre, a {
     <h1>Power: {{ power }}</h1>
     <h2>Time: {{ title }}</h2>
     <h2>Box:</h2>
-    <pre id="box"> </pre>
+    <div class="messagebox">
+        <pre id="box"> </pre>
 
-    <div>
-        <form action = "https://mkonji.xyz/message_from_a_post" method = "post">
-            <input type="text" name="message" value="" placeholder="say something">
-            <br>
-            <input type="password" name="password" value="" placeholder="password">
-            <input type="submit" name="enter_message" value="Send">
-        </form>
-        <button onclick="manual_refresh()">Manual Refresh</button>
-        <input type="checkbox" id="auto_refresh">
-        <label for="auto_refresh">(auto)</label>
-    </div>
+        <div>
+            <form action = "https://mkonji.xyz/message_from_a_post" method = "post">
+                <input type="text" name="message" value="" placeholder="say something">
+                <br>
+                <input type="password" name="password" value="" placeholder="password">
+                <input type="submit" name="enter_message" value="Send">
+            </form>
+            <button onclick="manual_refresh()">Manual Refresh</button>
+            <input type="checkbox" id="auto_refresh">
+            <label for="auto_refresh">(auto)</label>
+        </div>
 
-    <div>
-        <form action = "https://mkonji.xyz/ding" method = "post">
-            <input type="submit" name="ding_button" value="Ding Me">
-            <input type="password" name="password" value="" placeholder="ding password">
-        </form>
+        <div>
+            <form action = "https://mkonji.xyz/ding" method = "post">
+                <input type="submit" name="ding_button" value="Ding Me">
+                <input type="password" name="password" value="" placeholder="ding password">
+            </form>
+        </div>
+        <br> <a href="https://mkonji.xyz/boxarch" text="archive">archive</a>
+
     </div>
-    <br> <a href="https://mkonji.xyz/boxarch" text="archive">archive</a>
 
 
     <h2>Latest:</h2>
